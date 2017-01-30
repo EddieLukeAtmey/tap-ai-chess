@@ -12,11 +12,9 @@ class Square: UIButton{
     var piece: Piece?
     var c: Coordinate
     var moveableMark: MoveableSquare?
-    var heighlight: Bool = false
     
     init(c: Coordinate, piece: Piece?) {
         self.piece = piece
-        self.heighlight = false
         self.c = c
         let frame = CGRect(x: c.graphicalCoordinate().y, y: c.graphicalCoordinate().x, width: unit, height: unit)
         
@@ -41,6 +39,7 @@ class Square: UIButton{
         moveableMark = MoveableSquare()
         addSubview(moveableMark!)
         //moveableMark!.addTarget(self, action: #selector(GameViewController.pieceMove(to:)), for: .touchUpInside)
+        moveableMark?.isUserInteractionEnabled = false
     }
     
     func unhighlight() {

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MoveableSquare: UIButton{
+class MoveableSquare: UIButton {
     var piece: Piece?
     
     init() {

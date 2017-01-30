@@ -48,7 +48,14 @@ class Board {
     
     func makeMove(piece: Piece, target: Coordinate) {
         if piece.possibleMovesInBoard(board: self).contains(target) {
-           piece.coordinate = target
+            // Put the piece at the target coordinate
+            pieces[target.row][target.column] = piece
+            
+            // Remove the piece from current coordinate
+            pieces[piece.coordinate.row][piece.coordinate.column] = nil
+            
+            // Update the piece's coordinate
+            piece.coordinate = target
         }
     }
 

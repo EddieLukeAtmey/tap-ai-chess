@@ -39,7 +39,6 @@ class GameViewController: UIViewController {
                 aRow.append(square)
                 self.view.addSubview(square)
                 square.addTarget(self, action: #selector(GameViewController.squareTouched(square:)), for: .touchUpInside)
-                square.moveableMark?.addTarget(self, action: #selector(pieceMove(to:)), for: .touchUpInside)
             }
             chesstable.append(aRow)
         }
@@ -51,6 +50,10 @@ class GameViewController: UIViewController {
                 for column in 0...7 {
                     let square = chesstable[row][column]
                     square.piece = self.board.pieces[row][column]
+                    
+                    if square.piece == nil {
+                        square.setBackgroundImage(nil, for: .normal)
+                    }                    
                     if square.piece?.type == .pawn && square.piece?.side == .black {
                         square.setBackgroundImage(UIImage(named: "imePawn")! as UIImage, for: .normal)
                     }
@@ -103,7 +106,6 @@ class GameViewController: UIViewController {
                 square.layer.borderColor = UIColor.red.cgColor
                 square.backgroundColor = UIColor.yellow
                 highlightOn = true
-                square.heighlight = true
                 selectedSquare = square
                 
                 // show possible moves
@@ -111,25 +113,25 @@ class GameViewController: UIViewController {
                     chesstable[number.row][number.column].highlight()
                 }
                 
-            } else if square.heighlight == true && highlightOn == true{
+            } else {
                 square.unhighlight()
-                square.heighlight = false
                 for number in (square.piece?.possibleMovesInBoard(board: board))! {
                     chesstable[number.row][number.column].unhighlight()
                 }
                 highlightOn = false
             }
+        } else {
+            if highlightOn == true && square.moveableMark != nil && square != selectedSquare {
+                pieceMove(to: square)
+            }
         }
     }
     
-    func pieceMove(to: MoveableSquare) {
-        let targetSquare: Square = chesstable[(to.piece?.coordinate.row)!][(to.piece?.coordinate.column)!]
-        if !(selectedSquare?.moveableMark == nil) {
-            board.makeMove(piece: (selectedSquare?.piece)!, target: (targetSquare.piece?.coordinate)!)
-            targetSquare.piece = selectedSquare?.piece
-            selectedSquare?.piece = nil
-            refreshChessTable()
-        }
+    func pieceMove(to: Square) {
+        board.makeMove(piece: selectedSquare!.piece!, target: to.c)
+        to.piece = selectedSquare?.piece
+        selectedSquare?.piece = nil
+        refreshChessTable()
     }
 
     
